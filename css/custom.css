@@ -4,6 +4,10 @@ p.ref {
     /*color: blue;*/
 }
 
+div.MathJax_Display {
+    margin: 0px;
+}
+
 .wrapper {
     display: grid;
     grid-template-columns: 25% 25% 25% 25%;
