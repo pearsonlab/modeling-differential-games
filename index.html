@@ -33,7 +33,12 @@
 					[pearsonlab.github.io/modeling-differential-games](https://pearsonlab.github.io/modeling-differential-games)
 				</section>
 				<section>About me</section>
-				<section>I study reward and decision making</section>
+				<section data-markdown>
+					## Social decisions
+					- Modeling other minds
+					- Group dynamics
+					- Strategic behavior
+				</section>
 				<section data-background-image="https://web.duke.edu/mind/level2/faculty/pearson/assets/images/sfn2016/chess.jpg">
 					<aside class="notes" data-markdown>
 						### Pros:
@@ -43,6 +48,13 @@
 						- Highly idealized, limited dynamics
 						- Biologically aligned?
 					</aside>
+				</section>
+				<section>
+					<h3>More specifically...</h3>
+					<div style="width: 50%; margin: auto">
+						<img src="https://web.duke.edu/mind/level2/faculty/pearson/assets/images/misc/Prisoner&#39;s_Dilemma.svg" alt="">
+					</div>
+					<p class="ref">Jensen & Riestenberg (<a href="https://commons.wikimedia.org/wiki/File:Prisoner%27s_Dilemma_briefcase_exchange_(colorized).svg">Wikimedia</a>)</p>
 				</section>
 				<section data-background-image="https://web.duke.edu/mind/level2/faculty/pearson/assets/images/sfn2016/penalty-shot.jpg">
 					<aside class="notes" data-markdown>
@@ -57,7 +69,6 @@
 					<video width="70%" align="center" controls autoplay loop src="https://web.duke.edu/mind/level2/faculty/pearson/assets/videos/penaltyshot/sess130_new.mp4" type="video/mp4">
 						Your browser does not support the video tag.
 					</video>
-					<!-- <p class="ref">Iqbal, Yin et al. (<a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006895">PLoS Comp Bio, 2019</a>)</p> -->
 					<aside class="notes" data-markdown>
 					  - two monkeys, shooter and goalie (shooter recorded)
 					  - controlled by joysticks
@@ -85,7 +96,15 @@ vid.playbackRate = 1.;
 						</ul>
 					</div>
 				</section>
-				<section>Today's plan: two studies</section>
+				<section data-markdown>
+					## Today's plan:
+
+					- Generative model:
+						- focus on dynamics, inferring latent variables
+
+					- Discriminative model
+						- focus on prediction, sensitivity to inputs
+				</section>
 				<section>
 					<div style="float:left; width:12.5%">
 						<p></p>
@@ -94,14 +113,22 @@ vid.playbackRate = 1.;
 						<img src="https://web.duke.edu/mind/level2/faculty/pearson/assets/images/sfn2016/shariq.jpg" >
 						<p>Shariq Iqbal</p>
 					</div>
-					<div style="float:left; width:25.65%">
+					<div style="float:left; width:25.66%">
 						<img src="https://web.duke.edu/mind/level2/faculty/pearson/assets/images/website/sam.jpg" >
 						<p>Sam Yin</p>
 					</div>
-					<div style="float:left; width:25%">
+					<div style="float:left; width:25%; clear:right">
 						<img src="https://web.duke.edu/mind/level2/faculty/pearson/assets/images/sfn2016/PlattMichael.jpg" >
 						<p>Michael Platt</p>
 					</div>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<p class="ref">Iqbal, Yin et al. (<a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006895">PLoS Comp Bio, 2019</a>)</p>
 				</section>
 				<section>
 					<h3>Real trials</h3>
@@ -111,10 +138,10 @@ vid.playbackRate = 1.;
 				</section>
 				<section data-markdown>
 					### What we want
-					- ~~Joystick censoring~~
+					- Joystick censoring (yes! *but not today*)
 					- ~~Details of motor execution~~
-					- Model of latent cognitive state
-					- Capture interaction between players
+					- Incorporate domain knowledge in model
+					- Able to generate synthetic data (emulator)
 
 				</section>
 				<section data-markdown>
@@ -180,7 +207,7 @@ vid.playbackRate = 1.;
 						<li>Model $e^U$ as a *mixture* of normals</li>
 						<li>Use a Gaussian Mixture:
 							<ul>
-								<li>$U(g, s) = \sum_k w_k\mathcal{N}(g | \mu_k(s), \lambda_k^{-1}(s))$</li>
+								<li>$U(g, s) = \sum_k w_k(s)\mathcal{N}(g | \mu_k(s), \lambda_k^{-1}(s))$</li>
 								<li>i.e., goal mixture depends on current state</li>
 							</ul>
 							</li>
@@ -231,10 +258,6 @@ vid.playbackRate = 1.;
 						<li>Code in <a href="https://www.tensorflow.org/">TensorFlow</a> and <a href="http://edwardlib.org/">Edward</a> </li>
 					</ul>
 				</section>
-				<!-- <section>
-					<h3>It works!</h3>
-					Ground truth recovery on toy data
-				</section> -->
 				<section>
 					<h3>It fits!</h3>
 					<div style="width: 50%; float: left; text-align: left">
@@ -294,11 +317,11 @@ vid.playbackRate = 1.;
 					- We inferred a value function capable of explaining behavior in terms of goals.
 				</section>
 				<section>
-					<h2>Pacman</h2>
-					<video width="90%" align="center" controls autoplay loop src="https://web.duke.edu/mind/level2/faculty/pearson/assets/videos/pacman/pac_goals.mp4" type="video/mp4" id="pacman_goals_vid">
+					<h2>In progress: prey pursuit</h2>
+					<video width="70%" align="center" controls autoplay loop src="https://web.duke.edu/mind/level2/faculty/pearson/assets/videos/pacman/trial.mp4" type="video/mp4" id="pacman_goals_vid">
 						Your browser does not support the video tag.
 					</video>
-					<p class="ref">Yoo, Iqbal, Hayden, and Pearson</p>
+					<p class="ref">Yoo, Yin, Hayden, and Pearson</p>
 					<script>
 					var vid = document.getElementById("pacman_goals_vid");
 					vid.playbackRate = 0.5;
@@ -318,6 +341,16 @@ vid.playbackRate = 1.;
 					</div>
 					<div style="float:left; width:25%">
 					</div>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<p class="ref">McDonald et al. (<a href="https://www.biorxiv.org/content/10.1101/385195v1">Nat. Comm., 2019</a>)</p>
 				</section>
 				<section>
 					<h3>Penalty Shot</h3>
@@ -471,7 +504,9 @@ vid.playbackRate = 1.;
 					{ src: 'plugin/notes/notes.js', async: true },
 					{ src: 'plugin/math/math.js', async: true },
 					{ src: 'plugin/highlight/highlight.js', async: true }
-				]
+				],
+				// Push each slide change to the browser history. Implies `hash: true`
+				history: true,
 			});
 		</script>
 	</body>
