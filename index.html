@@ -481,7 +481,13 @@ vid.playbackRate = 1.;
 					</video>
 				</section>
 				<section>
-					Sensitivity index?
+					<h3>Modeling III</h3>
+					<p>How do we measure player coupling?</p>
+					<ul>
+						<li>GPs are differentiable! (and $\nabla$GP also a GP)</li>
+						<li>$\nabla_s f \sim $ sensitivity of policy to current game state</li>
+						<li>$\varrho \equiv \lvert L^{-1} \nabla f\rvert^2$ (whiten by Cholesky to weight variables equally)</li>
+					</ul>
 				</section>
 				<section>
 					<h3>How opponent-sensitive are you?</h3>
