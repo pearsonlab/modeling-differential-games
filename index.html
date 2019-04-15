@@ -64,6 +64,13 @@
 						- Decisions tightly linked to movement
 					</aside>
 				</section>
+				<section data-markdown>
+					## Differential games
+					- Continuous states and actions
+					- Control theory meets game theory
+					- Classic problem: pursuit and evasion
+					- Hard enough to prove solutions exist; explicit construction often intractable
+				</section>
 				<section>
 					<h3>Penalty Shot</h3>
 					<video width="70%" align="center" controls autoplay loop src="https://web.duke.edu/mind/level2/faculty/pearson/assets/videos/penaltyshot/sess130_new.mp4" type="video/mp4">
@@ -98,12 +105,11 @@ vid.playbackRate = 1.;
 				</section>
 				<section data-markdown>
 					## Today's plan:
+					- Model real (not optimal) behavior
+					- Two approaches
+						- **Generative model:** focus on dynamics, inferring latent variables
 
-					- Generative model:
-						- focus on dynamics, inferring latent variables
-
-					- Discriminative model
-						- focus on prediction, sensitivity to inputs
+						- **Discriminative model:** focus on prediction, sensitivity to inputs
 				</section>
 				<section>
 					<div style="float:left; width:12.5%">
@@ -365,7 +371,7 @@ vid.playbackRate = 1.;
 					  - repeated sessions
 					  - rapidly learned, rich dynamics
 					</aside>
-				</section>
+				</section> -->
 				<section>
 					<div style="width: 50%; float: left; text-align: left">
 						<video autoplay loop  src="https://web.duke.edu/mind/level2/faculty/pearson/assets/videos/penaltyshot/concat_trials.mp4" type="video/mp4" id="trace_video">
@@ -377,14 +383,14 @@ vid.playbackRate = 1.;
 						</script>
 					</div>
 					<div style="width: 50%; float: right; font-size: .9em" >
-						<h3>How it works</h3>
+						<h3>Only this time...</h3>
 						<ul style="font-size: 0.85">
 							<li>Human, computer opponents</li>
-							<li>Incentive compatible</li>
-							<li>Coevolving strategies</li>
+							<li>82 participant shooters, 2 human goalies</li>
+							<li>Constant x velocity</li>
 						</ul>
 					</div>
-				</section> -->
+				</section>
 				<section>
 					<h3>Highly variable strategies</h3>
 						<img  src="https://web.duke.edu/mind/level2/faculty/pearson/assets/images/penaltyshot/kelsey_pk/trajectories_3.svg" style="border: none; background: none; box-shadow: none; width: 50%; height: auto">
@@ -392,30 +398,66 @@ vid.playbackRate = 1.;
 						<img  src="https://web.duke.edu/mind/level2/faculty/pearson/assets/images/penaltyshot/kelsey_pk/trajectories_4.svg" style="border: none; background: none; box-shadow: none; width:50%; height: auto">
 				</section>
 				<section>
-					<h3>How do we model this?</h3>
+					<h3>Modeling I</h3>
+					<ul>
+						<li>Observed: most trajectories are piecewise linear</li>
+						<li>Idea: model velocity changepoints</li>
+						<li>Want:
+							<ul>
+								<li>flexible model</li>
+								<li>measure of uncertainty</li>
+								<li>measure of inter-player coupling</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+				<section>
+					<h3>Modeling II: Gaussian processes</h3>
+					<p>A Gaussian Process is a distribution over <i>functions</i></p>
+					<div style="float:left; width:10%">
+						<p></p>
+					</div>
+					<div style="float:left; width:40%">
+						<img src="https://web.duke.edu/mind/level2/faculty/pearson/assets/images/misc/gp_prior.png", style="height: 300px; width:auto">
+						<p>Prior</p>
+					</div>
+					<div style="float:left; width:40%">
+						<img src="https://web.duke.edu/mind/level2/faculty/pearson/assets/images/misc/gp_posterior.png" style="height: 300px; width:auto">
+						<p>Posterior</p>
+					</div>
+					<div style="float:right; width:10%"></div>
+					<p class="ref"><a href="http://www.gaussianprocess.org/gpml/chapters/RW.pdf">Rasmussen & Williams (2006)</a></p>
+				</section>
+				<section>
+					<h3>Modeling III</h3>
+					<p>Model change point policy as a GP</p>
 					$$p(\text{change}) = \Phi(f(s(t), \omega(t)))$$
 					$$f(s(t), \omega(t)) \sim \mathrm{GP}(0, k)$$
-					<br>
+					$$k(x, x') \propto \prod_i \exp((x_i - x')^2/\lambda_i^2)$$
 					<br>
 					<h3>Informally:</h3>
 					<ul>
 						<li>strategy depends on game state $s$, opponent $\omega$</li>
-						<li>$\mathrm{GP}$ is a distribution over <i>functions</i></li>
-						<li>Bayesian model: we can quantify uncertainty</li>
-						<li>Joint model: can do "counterfactual" experiments</li>
+						<li>log odds of changepoint is a smooth function</li>
 					</ul>
 				</section>
 				<section>
-					<h3>How likely are you to win?</h3>
-					<video width="70%" align="center" controls autoplay loop src="https://web.duke.edu/mind/level2/faculty/pearson/assets/videos/penaltyshot/concat_EV.mp4" type="video/mp4">
-						Your browser does not support the video tag.
-					</video>
-				</section>
-				<section>
-					<h3>How likely are you to change course?</h3>
-					<video width="70%" align="center" controls autoplay loop src="https://web.duke.edu/mind/level2/faculty/pearson/assets/videos/penaltyshot/concat_switch.mp4" type="video/mp4">
-						Your browser does not support the video tag.
-					</video>
+					<h3>Inference</h3>
+					<ul>
+						<li>Approximate inference via sparse GP methods
+							<ul>
+								<li><a href="http://www.jmlr.org/proceedings/papers/v5/titsias09a/titsias09a.pdf">Titsias (2009)</a>
+								</li>
+								<li><a href="http://www.jmlr.org/proceedings/papers/v38/hensman15.pdf">Hensman, Matthews, Ghahramani (2015)</a></li>
+							</ul>
+						<li>$M$ inducing points define a complete (differentiable) function
+							<ul>
+								<li>Takes $\mathcal{O}(NM^2)$ instead of $\mathcal{O}(N^3)$</li>
+							</ul>
+						</li>
+						</li>
+						<li>Coded in <a href="http://www.jmlr.org/papers/volume18/16-537/16-537.pdf">GPFlow</a> <a href="https://github.com/krm58/PenaltyShot_Behavior">(repo)</a></li>
+					</ul>
 				</section>
 				<section>
 					<h3>Real and predicted change points</h3>
@@ -427,10 +469,28 @@ vid.playbackRate = 1.;
 					</div>
 				</section>
 				<section>
+					<h3>Predicting change points</h3>
+					<video width="70%" align="center" controls autoplay loop src="https://web.duke.edu/mind/level2/faculty/pearson/assets/videos/penaltyshot/concat_switch.mp4" type="video/mp4">
+						Your browser does not support the video tag.
+					</video>
+				</section>
+				<section>
+					<h3>Same idea: Predicting wins</h3>
+					<video width="70%" align="center" controls autoplay loop src="https://web.duke.edu/mind/level2/faculty/pearson/assets/videos/penaltyshot/concat_EV.mp4" type="video/mp4">
+						Your browser does not support the video tag.
+					</video>
+				</section>
+				<section>
+					Sensitivity index?
+				</section>
+				<section>
 					<h3>How opponent-sensitive are you?</h3>
 					<video width="70%" align="center" controls autoplay loop src="https://web.duke.edu/mind/level2/faculty/pearson/assets/videos/penaltyshot/concat_oppSens.mp4" type="video/mp4">
 						Your browser does not support the video tag.
 					</video>
+				</section>
+				<section>
+					final move analysis
 				</section>
 				<section>
 					<h3>Summary</h3>
